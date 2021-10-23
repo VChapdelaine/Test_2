@@ -57,7 +57,8 @@ def addGTF_info(in_VCF, in_GTF_file, out_VCF):
         genes_nearest="."                                                                                     #
         last=gene                                                                                             #
       if not last:                                                                                                                 #nearest gene no 200kb no gene_in
-        dist=inf                                                                                                                   #
+        dist=inf   
+      if not genes_200kb and not genes_in:
         for gene in tabixfile.fetch(record.chrom,0,parser=pysam.asGTF()):                                                          #
           if min(abs(gene.start-record.pos),abs(gene.end-record.pos)) < dist:                                                      #
             dist=min(abs(gene.start-record.pos),abs(gene.end-record.pos))                                                          #
