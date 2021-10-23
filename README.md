@@ -14,7 +14,7 @@ tabix
 ## Requiered files
     sorted bgzip tabix indexed GTF file**
     indexed VCF file
-regular GTF file can be prepared using :
+**regular GTF file can be prepared using :
 
     (grep ^"#" in.gtf; grep -v ^"#" in.gtf | sort -k1,1 -k4,4n) | bgzip  > in.sorted.gtf.gz ; tabix -gff in.sorted.gtf.gz
    
