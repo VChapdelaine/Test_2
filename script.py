@@ -67,14 +67,14 @@ def addGTF_info(in_VCF, in_GTF_file, out_VCF):
             else:                                                                                                                    #
               last=gene                                                                                                              #
               break 
-         if last :
-            for gene in tabixfile.fetch(record.chrom, max(last.end,last.start),parser=pysam.asGTF()):                                                          #
-             if min(abs(gene.start-record.pos),abs(gene.end-record.pos)) < min(abs(last.end-record.pos),abs(last.start-record.pos)):                                                      #
-               dist=min(abs(gene.start-record.pos),abs(gene.end-record.pos))                                                          #
-               genes_nearest=gene.gene_id                                                                                             #
-             else:                                                                                                                    #
-               last=gene                                                                                                              #
-               break 
+        if last :
+          for gene in tabixfile.fetch(record.chrom, max(last.end,last.start),parser=pysam.asGTF()):                                                          #
+            if min(abs(gene.start-record.pos),abs(gene.end-record.pos)) < min(abs(last.end-record.pos),abs(last.start-record.pos)):                                
+              dist=min(abs(gene.start-record.pos),abs(gene.end-record.pos))                                                          #
+              genes_nearest=gene.gene_id                                                                                             #
+            else:                                                                                                                    #
+              last=gene                                                                                                              #
+              break 
       record.info['GENES_IN'] = ",".join(set(genes_in))
       if not genes_200kb:
         genes_200kb.append(".")
