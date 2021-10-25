@@ -36,23 +36,23 @@ def addGTF_info(in_VCF, in_GTF_file, out_VCF):
           genes_200kb.append(gene.gene_id)
           if not last:
             last=gene
-          if min(abs(gene.start-record.pos),abs(gene.end-record.pos)) < min(abs(last.end-record.pos),abs(last.start-record.pos)):
+          if min(abs(gene.start-record.pos-1),abs(gene.end-record.pos-1)) < min(abs(last.end-record.pos-1),abs(last.start-record.pos-1)):
             genes_nearest=gene.gene_id
             last=gene
-          if min(abs(gene.start-record.pos),abs(gene.end-record.pos))>200000: #200kb cap if 200kb
+          if min(abs(gene.start-record.pos-1),abs(gene.end-record.pos-1))>200000: #200kb cap if 200kb
             break 
       else :                   #regular +/-200kb skip beguining
-        for gene in tabixfile.fetch(record.chrom,record.pos-200000, parser=pysam.asGTF()):
-          if min(abs(gene.start-record.pos),abs(gene.end-record.pos))>200000: #200kb cap
+        for gene in tabixfile.fetch(record.chrom,record.pos-200001, parser=pysam.asGTF()):
+          if min(abs(gene.start-record.pos-1),abs(gene.end-record.pos-1))>200000: #200kb cap
             break 
           else:
             genes_200kb.append(gene.gene_id)
             if not last:
               last=gene
-            if min(abs(gene.start-record.pos),abs(gene.end-record.pos)) < min(abs(last.end-record.pos),abs(last.start-record.pos)): # nearest gene
+            if min(abs(gene.start-record.pos-1),abs(gene.end-record.pos-1)) < min(abs(last.end-record.pos-1),abs(last.start-record.pos-1)): # nearest gene
               genes_nearest=gene.gene_id                                                                                            #
               last=gene                                                                                                             #
-      for gene in tabixfile.fetch(record.chrom,record.pos, record.pos+len(record.ref),parser=pysam.asGTF()):  #gene IN
+      for gene in tabixfile.fetch(record.chrom,record.pos-1, record.pos+len(record.ref)-1,parser=pysam.asGTF()):  #gene IN
         genes_in.append(gene.gene_id)                                                                         #
         genes_nearest="."                                                                                     #
         last=gene                                                                                             #
@@ -61,16 +61,16 @@ def addGTF_info(in_VCF, in_GTF_file, out_VCF):
       if not genes_200kb and not genes_in:
         if not last: 
           for gene in tabixfile.fetch(record.chrom,0,parser=pysam.asGTF()):                                                          #
-            if min(abs(gene.start-record.pos),abs(gene.end-record.pos)) < dist:                                                      #
-              dist=min(abs(gene.start-record.pos),abs(gene.end-record.pos))                                                          #
+            if min(abs(gene.start-record.pos-1),abs(gene.end-record.pos-1)) < dist:                                                      #
+              dist=min(abs(gene.start-record.pos-1),abs(gene.end-record.pos-1))                                                          #
               genes_nearest=gene.gene_id                                                                                             #
             else:                                                                                                                    #
               last=gene                                                                                                              #
               break 
         if last :
           for gene in tabixfile.fetch(record.chrom, max(last.end,last.start),parser=pysam.asGTF()):                                                          #
-            if min(abs(gene.start-record.pos),abs(gene.end-record.pos)) < min(abs(last.end-record.pos),abs(last.start-record.pos)):                                
-              dist=min(abs(gene.start-record.pos),abs(gene.end-record.pos))                                                          #
+            if min(abs(gene.start-record.pos-1),abs(gene.end-record.pos-1)) < min(abs(last.end-record.pos-1),abs(last.start-record.pos-1)):                                
+              dist=min(abs(gene.start-record.pos-1),abs(gene.end-record.pos-1))                                                          #
               genes_nearest=gene.gene_id                                                                                             #
             else:                                                                                                                    #
               last=gene                                                                                                              #
